@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universal Image Converter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            brand: {
+              400: '#8b7df0',
+              500: '#6c5ce7',
+              600: '#5a4bcf',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .drag-active {
+      border-color: #8b7df0 !important;
+      background: rgba(108, 92, 231, 0.1) !important;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
+  
+  <nav class="sticky top-0 z-50 glass-panel border-b border-white/5 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
+        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white leading-tight">Universal Image Converter</h1>
+        <p class="text-[10px] font-medium text-brand-400 uppercase tracking-widest">Self-Hosted Tools</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 text-sm text-slate-400">
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+      </span>
+      <span>System Ready</span>
+    </div>
+  </nav>
+
+  <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-12 flex flex-col gap-8">
+    
+    <header class="text-center max-w-2xl mx-auto space-y-4">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Convert & Compress</h2>
+      <p class="text-lg text-slate-400 leading-relaxed">
+        Securely optimize your images without leaving your server. Convert into modern formats, resize, and bulk-download effortlessly.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      
+      <!-- Left Column: Both Settings Panels -->
+      <div class="col-span-1 space-y-6">
+        <!-- Configuration Panel -->
+        <aside class="glass-panel rounded-2xl p-6 shadow-xl space-y-6">
+        <div class="space-y-2">
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            Configuration
+          </h3>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-xs font-medium text-slate-400">Target Format</label>
+          <div class="relative">
+            <select id="formatSelect" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg pl-4 pr-10 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow">
+              <optgroup label="Modern (Recommended)">
+                <option value="webp" selected>WebP (Smaller Size)</option>
+                <option value="avif">AVIF (Next-Gen)</option>
+              </optgroup>
+              <optgroup label="Standard">
+                <option value="jpeg">JPEG</option>
+                <option value="png">PNG (Lossless)</option>
+                <option value="gif">GIF</option>
+                <option value="tiff">TIFF</option>
+              </optgroup>
+            </select>
+            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex justify-between items-end">
+            <label class="block text-xs font-medium text-slate-400">Quality Compression</label>
+            <span id="qualityValue" class="text-sm font-bold text-brand-400">80%</span>
+          </div>
+          <input type="range" id="qualitySlider" min="1" max="100" value="80" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+          <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+            <span>Smaller File</span>
+            <span>Better Detail</span>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block text-xs font-medium text-slate-400">Resize Dimensions (Optional)</label>
+          <div class="flex gap-3">
+            <div class="relative flex-1">
+              <input type="number" id="maxWidth" placeholder="Width" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
+            </div>
+            <div class="relative flex-1">
+              <input type="number" id="maxHeight" placeholder="Height" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Advanced Settings Panel -->
+      <aside class="col-span-1 glass-panel rounded-2xl p-6 shadow-xl space-y-6 mt-6 lg:mt-0">
+        <div class="space-y-2">
+          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+            Advanced Processing
+          </h3>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Metadata Toggle -->
+          <label class="flex items-center justify-between cursor-pointer group">
+            <div class="flex flex-col">
+              <span class="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Preserve EXIF Metadata</span>
+              <span class="text-[10px] text-slate-500">Keep camera details, GPS, etc.</span>
+            </div>
+            <div class="relative">
+              <input type="checkbox" id="keepMetadata" class="sr-only peer">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-brand-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-500"></div>
+            </div>
+          </label>
+
+          <div class="h-px w-full bg-slate-800 border-none"></div>
+
+          <!-- Watermark -->
+          <div class="space-y-3">
+            <label class="block text-xs font-medium text-slate-400">Text Watermark (Optional)</label>
+            <input type="text" id="watermarkText" placeholder="e.g. © 2026 POSIN" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+            
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <select id="watermarkPosition" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="bottom-right">Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="top-left">Top Left</option>
+                <option value="center">Center</option>
+              </select>
+              <select id="watermarkColor" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <option value="white">White</option>
+                <option value="black">Black</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div> <!-- Open Wrapper Div for Left Column Grouping -->
+
+      <!-- Central / Right Area -->
+      <div class="col-span-1 lg:col-span-2 space-y-6">
+        
+        <!-- Dropzone -->
+        <label id="dropZone" class="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-slate-700 border-dashed rounded-2xl cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-all duration-200 ease-in-out">
+          <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+          <div class="flex flex-col items-center justify-center pt-5 pb-6 z-10 pointer-events-none">
+            <svg class="w-12 h-12 mb-4 text-slate-400 group-hover:text-brand-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            <p class="mb-2 text-lg font-semibold text-slate-200">Click to upload or drag and drop</p>
+            <p class="text-sm text-slate-500">SVG, PNG, JPG, GIF, TIFF, WebP, AVIF</p>
+          </div>
+          <input id="fileInput" type="file" class="hidden" multiple accept="image/*" />
+        </label>
+
+        <!-- Queue Section -->
+        <div id="fileListContainer" class="hidden space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-semibold text-white">Upload Queue (<span id="fileCount">0</span>)</h3>
+            <div class="flex gap-3">
+              <button id="clearAllBtn" class="text-xs px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">Clear All</button>
+              <button id="convertBtn" class="text-xs font-bold px-4 py-1.5 rounded-lg bg-white text-slate-900 shadow-lg hover:shadow-xl hover:bg-slate-100 transition-all active:scale-95 flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span id="convertBtnText">Convert</span>
+              </button>
+            </div>
+          </div>
+          
+          <div id="fileList" class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden divide-y divide-slate-800/50 max-h-60 overflow-y-auto custom-scrollbar shadow-inner">
+            <!-- Items injected by JS -->
+          </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsContainer" class="hidden space-y-4 pt-6 border-t border-slate-800/60">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-emerald-400 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Conversion Complete
+            </h3>
+            <button id="downloadAllBtn" class="text-sm font-bold px-5 py-2 rounded-lg bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-400 transition-all active:scale-95 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+              </svg>
+              Download ZIP
+            </button>
+          </div>
+          
+          <p id="resultsSummary" class="text-sm text-slate-400 font-medium"></p>
+          
+          <div id="resultsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Results injected by JS -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Progress Overlay -->
+  <div id="progressOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl w-full max-w-sm text-center shadow-2xl space-y-6">
+      <div class="relative w-16 h-16 mx-auto">
+        <div class="absolute inset-0 border-4 border-slate-800 rounded-full"></div>
+        <div class="absolute inset-0 border-4 border-brand-500 rounded-full border-t-transparent animate-spin"></div>
+      </div>
+      <div>
+        <h3 class="text-lg font-bold text-white mb-2">Processing Images...</h3>
+        <p id="progressText" class="text-sm text-slate-400 font-medium">0 / 0 Data</p>
+      </div>
+      <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+        <div id="progressBar" class="bg-gradient-to-r from-brand-500 to-purple-500 h-full transition-all duration-300" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-auto py-6 text-center border-t border-white/5">
+    <p class="text-xs text-slate-600">&copy; 2026 Posin. Self-hosted image conversion tools.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

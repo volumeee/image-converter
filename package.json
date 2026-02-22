@@ -1,0 +1,13 @@
+{
+  "name": "image-converter",
+  "version": "1.0.0",
+  "description": "Self-hosted bulk image to WebP converter with beautiful UI",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["webp", "converter", "image", "bulk", "self-hosted"],
+  "author": "Bagus Erwanto",
+  "license": "MIT"
+}
