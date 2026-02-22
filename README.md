@@ -1,64 +1,33 @@
 # 🖼️ Universal Image Converter
 
-A beautifully designed, self-hosted, bulk image converter and optimizer. Built with Node.js, Express, Sharp, and Tailwind CSS. 
+Aplikasi web *self-hosted* gratis untuk mengonversi, memampatkan, dan mengecilkan ukuran gambar secara massal. Dibuat dengan antarmuka yang modern, sangat cepat, dan 100% menjaga privasi karena semuanya diproses di server Anda sendiri.
 
-Convert images directly on your server without relying on third-party cloud services. Perfect for e-commerce catalog processing, internal team tools, or personal asset management.
+## ✨ Fitur Utama
 
-![Universal Image Converter Preview](/public/favicon.ico)
+- **Konversi Multi-Format**:
+  Mendukung format gambar modern dan standar: **WebP, AVIF, JPEG, PNG, GIF**, dan **TIFF**.
+- **Super Cepat**:
+  Didukung oleh mesin `sharp` (berbasis libvips) yang mengkonversi ratusan gambar dalam hitungan detik.
+- **Pemrosesan Massal (Bulk)**:
+  Tarik & lepas (*drag and drop*) hingga 100 gambar sekaligus, dan unduh semua hasil optimasi sekaligus dalam file **ZIP**.
+- **Custom Resolusi & Kompresi**:
+  Atur kualitas output (1-100%) dan sesuaikan ukuran lebar/tinggi gambar (*smart aspect-ratio resize*).
+- **Pertahankan Data EXIF**:
+  Pilihan untuk membuang metadata demi ukuran super kecil, atau mempertahankan data penting (seperti GPS Kamera, Tanggal Foto).
+- **Watermark Teks Masal**:
+  Proteksi aset foto produk Anda dengan menambahkan *Watermark* teks sekaligus! Pilih letak posisi bebas (Kanan Bawah, Tengah, dll) beserta warna bayangannya.
+- **Tampilan UI/UX Premium**:
+  Desain elegan dengan tema gelap (*dark mode*), *glassmorphism*, dan transisi memukau berbasis Tailwind CSS tanpa kerumitan instalasi frontend.
 
-## ✨ Features
+## 🐳 Menggunakan Docker
 
-- **Multi-Format Support**: Convert between WebP, AVIF, JPEG, PNG, GIF, and TIFF.
-- **Lightning Fast**: Powered by [`sharp`](https://sharp.pixelplumbing.com/), the fastest image processing library for Node.js.
-- **Bulk Processing**: Drag and drop up to 100 images at once and download the optimized results in a single ZIP file.
-- **Advanced Optimization**: 
-  - Dynamic quality compression sliders.
-  - Smart aspect-ratio resizing.
-  - EXIF Metadata preservation toggle (Keep camera data or strip for max compression).
-  - Text watermarking with adjustable positioning.
-- **Premium UI/UX**: Aesthetic dark mode with glassmorphism effects, built entirely with Tailwind CSS.
+Anda bisa menjalankan aplikasi ini dengan sangat mudah menggunakan **Docker**:
 
-## 🚀 Quick Start
-
-Ensure you have [Node.js](https://nodejs.org/) installed on your machine.
-
-### 1. Clone the repository
 ```bash
-git clone https://github.com/volumeee/image-converter.git
-cd image-converter
+docker run -d -p 3456:3456 --name image-converter volumeee/image-converter:latest
 ```
+Buka browser dan arahkan ke `http://localhost:3456`
 
-### 2. Install dependencies
-```bash
-npm install
-```
-
-### 3. Start the server
-```bash
-npm start
-```
-*For development with auto-restart, you can run `npm run dev` if you have nodemon installed.*
-
-### 4. Open in browser
-Navigate to:
-```
-http://localhost:3456
-```
-
-## 🛠️ Technology Stack
-
-- **Backend**: Node.js & Express
-- **Image Processing Engine**: Sharp
-- **Frontend**: Vanilla Javascript (No compiling needed!)
-- **Styling**: Tailwind CSS via CDN
-
-## 🛡️ Privacy & Security (Self-Hosted Model)
-
-Unlike web-based converters, **Universal Image Converter** is designed to run locally or on your own VPS. 
-- Files never leave your local network/server.
-- Uploads and outputs are strictly stored in temporary `uploads/` and `output/` directories.
-- Automatic CRON job cleans up processed files every 10 minutes to prevent storage bloat.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
+*Dibuat untuk keperluan internal, sistem perkasiran (POSIN), atau manajemen katalog e-commerce skala besar.*  
+**License:** MIT
