@@ -21,12 +21,19 @@ Aplikasi web *self-hosted* gratis untuk mengonversi, memampatkan, dan mengecilka
 
 ## 🐳 Menggunakan Docker
 
-Anda bisa menjalankan aplikasi ini dengan sangat mudah menggunakan **Docker**:
+Aplikasi ini tersedia di **Docker Hub** dan **GitHub Container Registry (GHCR)**. Anda bisa menjalankan aplikasi ini dengan sangat mudah menggunakan perintah Docker berikut:
 
+**Melalui Docker Hub (Direkomendasikan):**
 ```bash
-docker run -d -p 3456:3456 --name image-converter volumeee/image-converter:latest
+docker run -d -p 3456:3456 --name image-converter bagose/image-converter:latest
 ```
-Buka browser dan arahkan ke `http://localhost:3456`
+
+**Atau melalui GitHub Container Registry:**
+```bash
+docker run -d -p 3456:3456 --name image-converter ghcr.io/volumeee/image-converter:latest
+```
+
+Buka browser Anda dan arahkan ke `http://localhost:3456`
 
 ---
 *Dibuat untuk keperluan internal, sistem perkasiran (POSIN), atau manajemen katalog e-commerce skala besar.*  
