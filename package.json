@@ -7,7 +7,16 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["webp", "converter", "image", "bulk", "self-hosted"],
+  "keywords": [
+    "webp",
+    "converter",
+    "image",
+    "bulk",
+    "self-hosted"
+  ],
   "author": "Bagus Erwanto",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "sharp": "^0.34.5"
+  }
 }
