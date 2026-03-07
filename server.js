@@ -539,6 +539,7 @@ app.all("/s/:id", (req, res) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${fileInfo.name} - Arsip</title>
+        <link rel="icon" href="/logo.png" type="image/png">
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
           tailwind.config = {
@@ -561,8 +562,8 @@ app.all("/s/:id", (req, res) => {
         
         <nav class="bg-slate-900 border-b border-slate-800/80 px-6 py-4 flex items-center justify-between flex-shrink-0 z-10 shadow-sm">
            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+              <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-amber-500/20">
+                <img src="/logo.png" class="w-full h-full object-cover rounded-xl" alt="Logo">
               </div>
               <div class="overflow-hidden">
                 <h2 class="text-sm font-bold text-white leading-none truncate max-w-xs md:max-w-md">${fileInfo.name}</h2>
@@ -698,14 +699,15 @@ app.all("/s/:id", (req, res) => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>${fileInfo.name || fileInfo.originalName} - Preview</title>
+          <link rel="icon" href="/logo.png" type="image/png">
           <script src="https://cdn.tailwindcss.com"></script>
         </head>
         <body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col p-4 md:p-8">
           <div class="max-w-5xl w-full mx-auto flex flex-col flex-1">
             <div class="bg-slate-900 border-x border-t border-slate-800 p-4 rounded-t-2xl flex flex-wrap gap-4 justify-between items-center shadow-lg">
               <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 bg-blue-500/10 text-blue-400 flex items-center justify-center flex-shrink-0">
-                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-brand-500/20 flex-shrink-0">
+                  <img src="/logo.png" class="w-full h-full object-cover rounded-xl" alt="Logo">
                 </div>
                 <div class="min-w-0">
                   <h1 class="text-sm md:text-base font-bold text-white truncate">${fileInfo.name || fileInfo.originalName}</h1>

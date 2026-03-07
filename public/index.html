@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Universal Image Converter</title>
+  <link rel="icon" href="/logo.png" type="image/png">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -43,10 +44,8 @@
   
   <nav class="sticky top-0 z-50 glass-panel border-b border-white/5 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
-        <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-        </svg>
+      <div class="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-brand-500/30">
+        <img src="/logo.png" class="w-full h-full object-cover rounded-xl" alt="Universal Tools Logo">
       </div>
       <div>
         <h1 class="text-lg font-bold tracking-tight text-white leading-tight">Universal Tools</h1>
