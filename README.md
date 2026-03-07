@@ -2,11 +2,11 @@
   <img src="https://raw.githubusercontent.com/volumeee/image-converter/main/public/banner.png" width="800" alt="Universal Image Converter API Banner" onerror="this.style.display='none'">
 </p>
 
-# 🖼️ Universal Image Converter
+# 🛠️ Universal Tools (Converter & Arsip)
 
-> **v1.0.0 — Blazing Fast Bulk Image Optimization API & UI**
+> **v1.1.0 — Blazing Fast Image Processor & Secure File Sharing**
 >
-> Self-hosted, privacy-first bulk image converter. Convert, compress, resize, and watermark hundreds of images instantly via an elegant Web UI or robust REST API.
+> Self-hosted, privacy-first productivity suite. Convert and optimize images instantly, or share any file securely with auto-expiring links (Arsip).
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
 [![Sharp](https://img.shields.io/badge/Sharp-vips-99CC00?logo=sharp&logoColor=white)](https://sharp.pixelplumbing.com/)
@@ -24,6 +24,8 @@ Universal Image Converter offers a beautiful Frontend UI alongside a powerful RE
 | ------------------- | ---------------------------------------------- | ------ | --------------------- |
 | `/api/convert`      | Optimize a single image & return JSON/Base64   | `POST` | `multipart/form-data` |
 | `/api/convert-bulk` | Process up to 100 images and return a ZIP file | `POST` | `multipart/form-data` |
+| `/api/arsip/upload` | Upload any file and get a short shareable link | `POST` | `multipart/form-data` |
+| `/s/:id`            | Public/secure link to download arsip file      | `GET`  | -                     |
 
 ---
 
@@ -68,15 +70,19 @@ PORT=3456
 
 ## ✨ Core Features
 
-| Feature                     | Description                                                                                                  |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| **Multi-Format Processing** | Input and output in `webp`, `avif`, `jpeg`, `png`, `gif`, and `tiff`.                                        |
-| **Blazing Fast (Sharp)**    | Powered by the libvips engine, achieving speeds 4-5x faster than ImageMagick.                                |
-| **Bulk Optimization**       | Drag and drop up to 100 images into the UI, or send arrays via API. Downloads as a single ZIP.               |
-| **Smart Resizing**          | Auto-calculate aspect ratios given `maxWidth` and/or `maxHeight`.                                            |
-| **EXIF Preservation**       | Options to strip metadata for the smallest possible size, or keep EXIF/GPS data.                             |
-| **Batch Watermarking**      | Apply text watermarks to all images at once. Configurable position, text, and color (dark/light adaptation). |
-| **Premium UI/UX**           | Glassmorphism design with Tailwind CSS. Beautiful, responsive, and completely client-side driven.            |
+| Feature                         | Description                                                                                                        |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Arsip (File/Folder Sharing)** | **NEW!** Drop any file or entire nested folders to get a secure shareable link.                                    |
+| **Auto-Archive Converter**      | Converted images automatically backup into a new Arsip folder and appear in your share history!                    |
+| **Persistent History Footer**   | Access your recent "My Share History" persistently at the bottom, no matter which tab you select.                  |
+| **Password & Expiry Config**    | Protect your shared Arsip links with per-item passwords and custom auto-expiry hours (default 24h).                |
+| **Split-Pane Folder View**      | Beautifully view shared folders like a desktop file manager. Quick access to embedded previews without reloading.  |
+| **Multi-Format Image**          | Input and output in `webp`, `avif`, `jpeg`, `png`, `gif`, and `tiff`.                                              |
+| **Blazing Fast (Sharp)**        | Powered by the libvips engine, achieving speeds 4-5x faster than ImageMagick.                                      |
+| **Bulk Optimization**           | Drag and drop up to 100 images into the UI, or send arrays via API. Downloads as a single ZIP.                     |
+| **Advanced Horizontal Panel**   | Ergonomic UI grouping featuring an optimized top-level horizontal panel for metadata and watermark toggling.       |
+| **Smart Resizing**              | Auto-calculate aspect ratios given `maxWidth` and/or `maxHeight`.                                                  |
+| **Premium UI/UX**               | Glassmorphism design with Tailwind CSS. Beautiful dark mode, responsive modals, and completely client-side driven. |
 
 ---
 
@@ -155,8 +161,10 @@ services:
 
 ## 🔒 System Security & Clean Up
 
-- **100% Privacy:** No images are ever uploaded to a remote third-party cloud. All processing happens entirely inside your VPS or Local Machine memory.
-- **Auto-Cleanup Routine:** The server runs a background sweeping task every 10 minutes to safely scrub and delete any temporary upload outputs older than 1 hour.
+- **100% Privacy:** No files are ever uploaded to a remote third-party cloud. All processing and storage happen entirely inside your VPS or Local Machine.
+- **Auto-Cleanup Routine:**
+  - **Image Converter:** Temporary outputs are scrubbed every 10 minutes (older than 1 hour).
+  - **Arsip:** Expired files are strictly deleted every 10 minutes (older than 24 hours).
 
 ---
 

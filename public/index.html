@@ -41,19 +41,30 @@
 </head>
 <body class="bg-slate-950 text-slate-200 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-white">
   
-  <nav class="sticky top-0 z-50 glass-panel border-b border-white/5 px-6 py-4 flex items-center justify-between">
+  <nav class="sticky top-0 z-50 glass-panel border-b border-white/5 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
     <div class="flex items-center gap-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-purple-600 flex items-center justify-center shadow-lg shadow-brand-500/30">
         <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
         </svg>
       </div>
       <div>
-        <h1 class="text-lg font-bold tracking-tight text-white leading-tight">Universal Image Converter</h1>
-        <p class="text-[10px] font-medium text-brand-400 uppercase tracking-widest">Self-Hosted Tools</p>
+        <h1 class="text-lg font-bold tracking-tight text-white leading-tight">Universal Tools</h1>
+        <p class="text-[10px] font-medium text-brand-400 uppercase tracking-widest">Self-Hosted Productivity</p>
       </div>
     </div>
-    <div class="flex items-center gap-2 text-sm text-slate-400">
+
+    <!-- Tabs -->
+    <div class="flex bg-slate-900/50 p-1 rounded-xl border border-white/5">
+      <button id="tabConverter" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all bg-brand-500 text-white shadow-lg">
+        Converter
+      </button>
+      <button id="tabArsip" class="px-4 py-2 text-sm font-semibold rounded-lg transition-all text-slate-400 hover:text-slate-200">
+        Arsip (Share)
+      </button>
+    </div>
+
+    <div class="hidden md:flex items-center gap-2 text-sm text-slate-400">
       <span class="relative flex h-2.5 w-2.5">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -65,142 +76,209 @@
   <main class="flex-1 w-full max-w-5xl mx-auto px-4 py-12 flex flex-col gap-8">
     
     <header class="text-center max-w-2xl mx-auto space-y-4">
-      <h2 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Convert & Compress</h2>
-      <p class="text-lg text-slate-400 leading-relaxed">
+      <h2 id="heroTitle" class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Convert & Compress</h2>
+      <p id="heroDesc" class="text-lg text-slate-400 leading-relaxed">
         Securely optimize your images without leaving your server. Convert into modern formats, resize, and bulk-download effortlessly.
       </p>
     </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-      
-      <!-- Left Column: Both Settings Panels -->
-      <div class="col-span-1 space-y-6">
-        <!-- Configuration Panel -->
-        <aside class="glass-panel rounded-2xl p-6 shadow-xl space-y-6">
-        <div class="space-y-2">
-          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            Configuration
-          </h3>
-        </div>
-
-        <div class="space-y-3">
-          <label class="block text-xs font-medium text-slate-400">Target Format</label>
-          <div class="relative">
-            <select id="formatSelect" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg pl-4 pr-10 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow">
-              <optgroup label="Modern (Recommended)">
-                <option value="webp" selected>WebP (Smaller Size)</option>
-                <option value="avif">AVIF (Next-Gen)</option>
-              </optgroup>
-              <optgroup label="Standard">
-                <option value="jpeg">JPEG</option>
-                <option value="png">PNG (Lossless)</option>
-                <option value="gif">GIF</option>
-                <option value="tiff">TIFF</option>
-              </optgroup>
-            </select>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
-              <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+    <!-- Advanced Processing Panel (Horizontal, Top) -->
+    <div id="converterAdvancedSettings" class="mb-6 w-full hidden">
+      <aside class="glass-panel rounded-2xl p-4 shadow-xl">
+        <div class="flex flex-col md:flex-row items-center gap-6 justify-between">
+          
+          <!-- Title & Metadata -->
+          <div class="flex items-center gap-5 flex-1 w-full border-b md:border-b-0 md:border-r border-slate-700/50 pb-4 md:pb-0 pr-0 md:pr-6">
+            <h3 class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2 whitespace-nowrap min-w-max">
+              <svg class="w-4 h-4 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
               </svg>
-            </div>
+              Advanced
+            </h3>
+            <label class="flex items-center justify-end md:justify-start cursor-pointer group gap-3 flex-1">
+              <div class="flex flex-col">
+                <span class="text-[11px] font-medium text-slate-200 group-hover:text-white transition-colors">Preserve EXIF Metadata</span>
+              </div>
+              <div class="relative flex-shrink-0">
+                <input type="checkbox" id="keepMetadata" class="sr-only peer">
+                <div class="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-500 cursor-pointer"></div>
+              </div>
+            </label>
           </div>
-        </div>
-
-        <div class="space-y-3">
-          <div class="flex justify-between items-end">
-            <label class="block text-xs font-medium text-slate-400">Quality Compression</label>
-            <span id="qualityValue" class="text-sm font-bold text-brand-400">80%</span>
-          </div>
-          <input type="range" id="qualitySlider" min="1" max="100" value="80" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
-          <div class="flex justify-between text-[10px] text-slate-500 font-medium">
-            <span>Smaller File</span>
-            <span>Better Detail</span>
-          </div>
-        </div>
-
-        <div class="space-y-3">
-          <label class="block text-xs font-medium text-slate-400">Resize Dimensions (Optional)</label>
-          <div class="flex gap-3">
-            <div class="relative flex-1">
-              <input type="number" id="maxWidth" placeholder="Width" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
-              <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
-            </div>
-            <div class="relative flex-1">
-              <input type="number" id="maxHeight" placeholder="Height" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
-              <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <!-- Advanced Settings Panel -->
-      <aside class="col-span-1 glass-panel rounded-2xl p-6 shadow-xl space-y-6 mt-6 lg:mt-0">
-        <div class="space-y-2">
-          <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-            </svg>
-            Advanced Processing
-          </h3>
-        </div>
-
-        <div class="space-y-4">
-          <!-- Metadata Toggle -->
-          <label class="flex items-center justify-between cursor-pointer group">
-            <div class="flex flex-col">
-              <span class="text-sm font-medium text-slate-200 group-hover:text-white transition-colors">Preserve EXIF Metadata</span>
-              <span class="text-[10px] text-slate-500">Keep camera details, GPS, etc.</span>
-            </div>
-            <div class="relative">
-              <input type="checkbox" id="keepMetadata" class="sr-only peer">
-              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-brand-500 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-500"></div>
-            </div>
-          </label>
-
-          <div class="h-px w-full bg-slate-800 border-none"></div>
 
           <!-- Watermark -->
-          <div class="space-y-3">
-            <label class="block text-xs font-medium text-slate-400">Text Watermark (Optional)</label>
-            <input type="text" id="watermarkText" placeholder="e.g. © 2026 POSIN" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
-            
-            <div class="grid grid-cols-2 gap-2 mt-2">
-              <select id="watermarkPosition" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <div class="flex flex-col sm:flex-row items-center gap-3 flex-[2] w-full">
+            <label class="text-[11px] font-medium text-slate-400 whitespace-nowrap hidden sm:block">Text Watermark</label>
+            <input type="text" id="watermarkText" placeholder="Watermark e.g. © 2026 POSIN" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-all shadow-inner">
+            <div class="flex gap-2 w-full sm:w-auto">
+              <select id="watermarkPosition" class="flex-1 sm:flex-none appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-all shadow-inner cursor-pointer">
                 <option value="bottom-right">Bottom Right</option>
                 <option value="bottom-left">Bottom Left</option>
                 <option value="top-right">Top Right</option>
                 <option value="top-left">Top Left</option>
                 <option value="center">Center</option>
               </select>
-              <select id="watermarkColor" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500">
+              <select id="watermarkColor" class="flex-1 sm:flex-none appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 transition-all shadow-inner cursor-pointer">
                 <option value="white">White</option>
                 <option value="black">Black</option>
               </select>
             </div>
           </div>
+
         </div>
       </aside>
-    </div> <!-- Open Wrapper Div for Left Column Grouping -->
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+      
+      <div id="converterSettings" class="col-span-1 space-y-6">
+        <!-- Configuration Panel -->
+        <aside class="glass-panel rounded-2xl p-6 shadow-xl space-y-6">
+          <div class="space-y-2">
+            <h3 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              </svg>
+              Configuration
+            </h3>
+          </div>
+
+          <div class="space-y-3">
+            <label class="block text-xs font-medium text-slate-400">Target Format</label>
+            <div class="relative">
+              <select id="formatSelect" class="w-full appearance-none bg-slate-900 border border-slate-700 text-slate-200 rounded-lg pl-4 pr-10 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 transition-shadow">
+                <optgroup label="Modern (Recommended)">
+                  <option value="webp" selected>WebP (Smaller Size)</option>
+                  <option value="avif">AVIF (Next-Gen)</option>
+                </optgroup>
+                <optgroup label="Standard">
+                  <option value="jpeg">JPEG</option>
+                  <option value="png">PNG (Lossless)</option>
+                  <option value="gif">GIF</option>
+                  <option value="tiff">TIFF</option>
+                </optgroup>
+              </select>
+              <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div class="flex justify-between items-end">
+              <label class="block text-xs font-medium text-slate-400">Quality Compression</label>
+              <span id="qualityValue" class="text-sm font-bold text-brand-400">80%</span>
+            </div>
+            <input type="range" id="qualitySlider" min="1" max="100" value="80" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-brand-500">
+            <div class="flex justify-between text-[10px] text-slate-500 font-medium">
+              <span>Smaller File</span>
+              <span>Better Detail</span>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <label class="block text-xs font-medium text-slate-400">Resize Dimensions (Optional)</label>
+            <div class="flex gap-3">
+              <div class="relative flex-1">
+                <input type="number" id="maxWidth" placeholder="Width" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
+              </div>
+              <div class="relative flex-1">
+                <input type="number" id="maxHeight" placeholder="Height" class="w-full bg-slate-900 border border-slate-700 text-slate-200 rounded-lg px-3 py-2.5 text-sm placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-brand-500">
+                <span class="absolute inset-y-0 right-3 flex items-center text-xs text-slate-500 pointer-events-none">px</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+
+      </div>
+
+      <!-- Arsip Info Panel (Visible only in Arsip mode) -->
+      <div id="arsipSettings" class="col-span-1 hidden space-y-6">
+        <aside class="glass-panel rounded-2xl p-6 shadow-xl space-y-6 border-brand-500/20">
+          <div class="space-y-2">
+            <h3 class="text-sm font-semibold text-brand-400 uppercase tracking-wider flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Arsip (Share) Info
+            </h3>
+          </div>
+          <div class="space-y-4">
+            <div class="bg-brand-500/5 border border-brand-500/10 rounded-xl p-4">
+              <p class="text-xs text-slate-300 leading-relaxed">
+                This feature allows you to upload any file (images, documents, zip) and get a secure link to share securely from your own server.
+              </p>
+            </div>
+            
+
+            <ul class="space-y-3 pt-2">
+              <li class="flex items-center gap-3 text-xs text-slate-400">
+                <div class="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center text-brand-400 flex-shrink-0">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                100% Privacy on your local server.
+              </li>
+              <li class="flex items-center gap-3 text-xs text-slate-400">
+                <div class="w-5 h-5 rounded-full bg-slate-800 flex items-center justify-center text-brand-400 flex-shrink-0">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                </div>
+                Maximum file size: <b>100 MB</b>.
+              </li>
+            </ul>
+          </div>
+        </aside>
+      </div>
 
       <!-- Central / Right Area -->
       <div class="col-span-1 lg:col-span-2 space-y-6">
         
         <!-- Dropzone -->
-        <label id="dropZone" class="group relative flex flex-col items-center justify-center w-full h-64 border-2 border-slate-700 border-dashed rounded-2xl cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 transition-all duration-200 ease-in-out">
+        <!-- Dropzone (div, NOT label — avoids Linux GTK double-dialog bug) -->
+        <div id="dropZone" class="group relative flex flex-col items-center justify-center w-full min-h-[18rem] md:min-h-[22rem] border-2 border-slate-700 border-dashed rounded-2xl cursor-pointer bg-slate-900/50 hover:bg-slate-800/50 hover:border-brand-500/50 transition-all duration-300 ease-in-out shadow-sm">
           <div class="absolute inset-0 bg-gradient-to-br from-brand-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div class="flex flex-col items-center justify-center pt-5 pb-6 z-10 pointer-events-none">
-            <svg class="w-12 h-12 mb-4 text-slate-400 group-hover:text-brand-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
-            </svg>
-            <p class="mb-2 text-lg font-semibold text-slate-200">Click to upload or drag and drop</p>
-            <p class="text-sm text-slate-500">SVG, PNG, JPG, GIF, TIFF, WebP, AVIF</p>
+          <div class="flex flex-col items-center justify-center py-10 z-10 pointer-events-none text-center px-4 w-full">
+            <div class="w-16 h-16 bg-slate-800/80 rounded-full flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-brand-500/20 transition-all duration-300 shadow-md">
+              <svg id="dropZoneIcon" class="w-8 h-8 text-slate-400 group-hover:text-brand-400 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+              </svg>
+            </div>
+            <p id="dropZoneTitle" class="mb-2 text-xl font-bold text-slate-200">Click to upload or drag & drop</p>
+            <p id="dropZoneSub" class="text-sm font-medium text-slate-500 mb-6 bg-slate-950/50 px-3 py-1 rounded-full border border-slate-800">Supports Images, Documents, & Archives</p>
+            <div id="arsipButtons" class="hidden flex flex-col items-center gap-4 mt-2 pointer-events-auto w-full max-w-sm">
+              <div class="flex gap-3 w-full justify-center">
+                <button id="btnSelectFiles" class="flex-1 px-4 py-3 bg-slate-800 hover:bg-slate-700 text-white text-sm font-bold rounded-xl transition-colors border border-slate-600 shadow-lg active:scale-95" onclick="event.stopPropagation(); fileInput.click();">Select Files</button>
+                <button id="btnSelectFolder" class="flex-1 px-4 py-3 bg-brand-500 hover:bg-brand-400 text-white text-sm font-bold rounded-xl transition-colors shadow-lg shadow-brand-500/20 active:scale-95 flex items-center justify-center gap-2" onclick="event.stopPropagation(); folderInput.click();">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg> 
+                  Select Folder
+                </button>
+              </div>
+              <div id="arsipConfigs" class="flex items-center justify-between w-full bg-slate-950 p-4 rounded-xl border border-slate-800 shadow-inner" onclick="event.stopPropagation();">
+                <div class="flex items-center gap-2">
+                  <label class="text-xs text-slate-400 font-medium">Expire in:</label>
+                  <select id="arsipExpiry" class="bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500">
+                    <option value="1">1 Hour</option>
+                    <option value="12">12 Hours</option>
+                    <option value="24" selected>24 Hours</option>
+                    <option value="72">3 Days</option>
+                    <option value="168">7 Days</option>
+                  </select>
+                </div>
+                <div class="flex items-center gap-2">
+                  <label class="text-xs text-slate-400 font-medium">Password:</label>
+                  <input type="password" id="arsipPassword" placeholder="Optional" class="w-24 bg-slate-800 border border-slate-600 text-slate-200 rounded-lg px-2 py-1 text-xs placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
+                </div>
+              </div>
+            </div>
           </div>
-          <input id="fileInput" type="file" class="hidden" multiple accept="image/*" />
-        </label>
+        </div>
+        <!-- File input is completely OUTSIDE the dropzone to prevent event conflicts -->
+        <input id="fileInput" type="file" class="hidden" multiple />
+        <input id="folderInput" type="file" webkitdirectory directory multiple class="hidden" />
 
         <!-- Queue Section -->
         <div id="fileListContainer" class="hidden space-y-4">
@@ -246,9 +324,43 @@
           </div>
         </div>
 
+        <!-- Arsip Results Section (Shareable Links) -->
+        <div id="arsipResultsContainer" class="hidden space-y-4 pt-6 border-t border-brand-500/30">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-brand-400 flex items-center gap-2">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+              </svg>
+              Links Ready to Share
+            </h3>
+          </div>
+          
+          <div id="arsipResultsList" class="grid grid-cols-1 gap-4">            <!-- Arsip items injected by JS -->
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
+
+  <!-- Persistent My Arsip History Section -->
+  <section id="arsipHistoryContainer" class="w-full max-w-7xl mx-auto px-6 pb-12 space-y-4">
+    <div class="flex items-center justify-between border-t border-slate-800/60 pt-8">
+      <h3 class="text-lg font-semibold text-slate-300 flex items-center gap-2">
+        <svg class="w-5 h-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.25v5.5l4 2m6-3.25a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        My Share History
+      </h3>
+      <button id="refreshHistoryBtn" onclick="fetchArsipHistory()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-lg transition-colors border border-slate-700 shadow-sm active:scale-95 flex items-center gap-2">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Refresh
+      </button>
+    </div>
+    <div id="arsipHistoryList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- History items injected by JS -->
+    </div>
+  </section>
 
   <!-- Progress Overlay -->
   <div id="progressOverlay" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
@@ -267,10 +379,34 @@
     </div>
   </div>
 
+  <!-- Edit Arsip Modal -->
+  <div id="editArsipModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl w-full max-w-sm shadow-2xl relative">
+      <button onclick="closeEditModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+      <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><svg class="w-5 h-5 text-brand-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Update Share Link</h3>
+      
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">Add to Expiration (Hours)</label>
+          <input type="number" id="editArsipExpiry" value="24" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+          <p class="text-[10px] text-slate-500 mt-1">Leaves unchanged if blank. Will add the specified hours from now.</p>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-400 mb-1">New Password (Optional)</label>
+          <input type="password" id="editArsipPassword" placeholder="Leave empty to remove password" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-slate-200 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all">
+        </div>
+        <button id="saveEditArsipBtn" class="w-full py-2.5 bg-brand-500 hover:bg-brand-400 text-white font-bold rounded-lg transition-colors mt-2 shadow-lg shadow-brand-500/20 active:scale-[0.98]">
+          Update Settings
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="mt-auto py-6 text-center border-t border-white/5">
     <p class="text-xs text-slate-600">&copy; 2026 Posin. Self-hosted image conversion tools.</p>
   </footer>
 
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-[200] flex flex-col gap-2 pointer-events-none *:pointer-events-auto"></div>
   <script src="app.js"></script>
 </body>
 </html>
