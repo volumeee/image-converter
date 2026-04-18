@@ -4,6 +4,7 @@ const sharp = require("sharp");
 const archiver = require("archiver");
 const path = require("path");
 const fs = require("fs");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3456;
@@ -54,8 +55,30 @@ const SUPPORTED_FORMATS = ["webp", "jpeg", "png", "avif", "tiff", "gif"];
 
 function processImage(pipeline, format, quality) {
   const options = {};
-  if (["jpeg", "webp", "avif", "tiff"].includes(format)) {
-    options.quality = quality;
+  switch (format) {
+    case "jpeg":
+      options.quality = quality;
+      options.mozjpeg = true;
+      break;
+    case "webp":
+      options.quality = quality;
+      options.effort = 6;
+      break;
+    case "avif":
+      options.quality = quality;
+      options.effort = 4;
+      break;
+    case "tiff":
+      options.quality = quality;
+      options.compression = "lzw";
+      break;
+    case "png":
+      options.compressionLevel = 9;
+      options.palette = quality < 80;
+      break;
+    case "gif":
+      options.effort = 10;
+      break;
   }
   return pipeline.toFormat(format, options);
 }
@@ -71,6 +94,15 @@ function getGravity(position) {
   return map[position] || "southeast";
 }
 
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&;")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, '"')
+    .replace(/'/g, "'");
+}
+
 function createWatermarkBuffer(text, color, imgWidth) {
   const fontSize = Math.max(14, Math.floor(imgWidth / 25));
   const svgWidth = text.length * (fontSize * 0.7) + 40;
@@ -79,16 +111,31 @@ function createWatermarkBuffer(text, color, imgWidth) {
   const shadowColor =
     color === "white" ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.6)";
 
+  const safeText = escapeHtml(text);
+
   return Buffer.from(`
     <svg width="${svgWidth}" height="${svgHeight}" xmlns="http://www.w3.org/2000/svg">
       <style>
         .txt { fill: ${color}; font-size: ${fontSize}px; font-family: sans-serif; font-weight: bold; }
         .shadow { fill: ${shadowColor}; font-size: ${fontSize}px; font-family: sans-serif; font-weight: bold; }
       </style>
-      <text x="12" y="${fontSize + 12}" class="shadow">${text}</text>
-      <text x="10" y="${fontSize + 10}" class="txt">${text}</text>
+      <text x="12" y="${fontSize + 12}" class="shadow">${safeText}</text>
+      <text x="10" y="${fontSize + 10}" class="txt">${safeText}</text>
     </svg>
   `);
+}
+
+function calculateFinalWidth(maxWidth, maxHeight, metadata) {
+  if (maxWidth && maxHeight) {
+    return Math.min(maxWidth, metadata.width);
+  } else if (maxWidth) {
+    return Math.min(maxWidth, metadata.width);
+  } else if (maxHeight) {
+    const ratio = metadata.height > 0 ? metadata.width / metadata.height : 1;
+    return Math.round(maxHeight * ratio);
+  } else {
+    return metadata.width;
+  }
 }
 
 app.post("/api/convert", upload.single("image"), async (req, res) => {
@@ -140,10 +187,11 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
     }
 
     // Calculate new dimensions after resize for watermark scaling
-    const finalWidth = maxWidth
-      ? Math.min(maxWidth, metadata.width)
-      : metadata.width;
+    // const finalWidth = maxWidth
+    //   ? Math.min(maxWidth, metadata.width)
+    //   : metadata.width;
 
+    const finalWidth = calculateFinalWidth(maxWidth, maxHeight, metadata);
     // Watermark
     if (watermarkText) {
       const overlay = createWatermarkBuffer(
@@ -158,6 +206,7 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
 
     pipeline = processImage(pipeline, targetFormat, quality);
     const outputBuffer = await pipeline.toBuffer();
+    const outputMeta = await sharp(outputBuffer).metadata();
 
     const originalName = path.parse(req.file.originalname).name;
     const ext = targetFormat === "jpeg" ? "jpg" : targetFormat;
@@ -169,8 +218,8 @@ app.post("/api/convert", upload.single("image"), async (req, res) => {
       originalSize: req.file.size,
       convertedSize: outputBuffer.length,
       savings: Math.round((1 - outputBuffer.length / req.file.size) * 100),
-      width: metadata.width,
-      height: metadata.height,
+      width: outputMeta.width,
+      height: outputMeta.height,
       format: targetFormat,
       base64: outputBuffer.toString("base64"),
     });
@@ -225,51 +274,58 @@ app.post("/api/convert-bulk", upload.array("images", 100), async (req, res) => {
     const archive = archiver("zip", { zlib: { level: 1 } });
     archive.pipe(res);
 
-    for (const file of validFiles) {
-      try {
-        let pipeline = sharp(file.buffer);
-        const metadata = await pipeline.metadata();
+    const BATCH_SIZE = 10;
+    for (let i = 0; i < validFiles.length; i += BATCH_SIZE) {
+      const batch = validFiles.slice(i, i + BATCH_SIZE);
+      const results = await Promise.all(
+        batch.map(async (file) => {
+          try {
+            let pipeline = sharp(file.buffer);
+            const metadata = await pipeline.metadata();
 
-        if (keepMetadata) pipeline = pipeline.withMetadata();
+            if (keepMetadata) pipeline = pipeline.withMetadata();
 
-        if (maxWidth || maxHeight) {
-          pipeline = pipeline.resize({
-            width: maxWidth || undefined,
-            height: maxHeight || undefined,
-            fit: "inside",
-            withoutEnlargement: true,
-          });
-        }
+            if (maxWidth || maxHeight) {
+              pipeline = pipeline.resize({
+                width: maxWidth || undefined,
+                height: maxHeight || undefined,
+                fit: "inside",
+                withoutEnlargement: true,
+              });
+            }
 
-        const finalWidth = maxWidth
-          ? Math.min(maxWidth, metadata.width)
-          : metadata.width;
+            const finalWidth = calculateFinalWidth(
+              maxWidth,
+              maxHeight,
+              metadata,
+            );
 
-        if (watermarkText) {
-          const overlay = createWatermarkBuffer(
-            watermarkText,
-            watermarkColor,
-            finalWidth,
-          );
-          pipeline = pipeline.composite([
-            { input: overlay, gravity: watermarkPosition },
-          ]);
-        }
+            if (watermarkText) {
+              const overlay = createWatermarkBuffer(
+                watermarkText,
+                watermarkColor,
+                finalWidth,
+              );
+              pipeline = pipeline.composite([
+                { input: overlay, gravity: watermarkPosition },
+              ]);
+            }
 
-        pipeline = processImage(pipeline, targetFormat, quality);
-        const outputBuffer = await pipeline.toBuffer();
-        const originalName = path.parse(file.originalname).name;
-        const ext = targetFormat === "jpeg" ? "jpg" : targetFormat;
+            pipeline = processImage(pipeline, targetFormat, quality);
+            const outputBuffer = await pipeline.toBuffer();
+            const originalName = path.parse(file.originalname).name;
+            const ext = targetFormat === "jpeg" ? "jpg" : targetFormat;
 
-        archive.append(outputBuffer, { name: `${originalName}.${ext}` });
-      } catch (fileErr) {
-        console.error(
-          `Skipping file ${file.originalname} due to error:`,
-          fileErr.message,
-        );
-      }
+            archive.append(outputBuffer, { name: `${originalName}.${ext}` });
+          } catch (fileErr) {
+            console.error(
+              `Skipping file ${file.originalname} due to error:`,
+              fileErr.message,
+            );
+          }
+        }),
+      );
     }
-
     await archive.finalize();
   } catch (err) {
     console.error("Bulk convert error:", err);
@@ -307,7 +363,6 @@ app.post("/api/arsip/upload", upload.array("files", 1000), async (req, res) => {
     if (!req.files || req.files.length === 0)
       return res.status(400).json({ error: "No file uploaded" });
 
-    const crypto = require("crypto");
     const shortId = crypto.randomBytes(6).toString("hex");
     const isFolder = req.body.type === "folder";
     const folderName = req.body.folderName || "Folder";
@@ -324,6 +379,11 @@ app.post("/api/arsip/upload", upload.array("files", 1000), async (req, res) => {
         const relPath = filePaths[idx] || file.originalname;
         const sanitizedRelBase = relPath.replace(/[^a-zA-Z0-9.\-_/]/g, "_");
         const fullPath = path.join(targetDir, sanitizedRelBase);
+
+        if (!fullPath.startsWith(targetDir)) {
+          return res.status(400).json({ error: "Invalid file path" });
+        }
+
         fs.mkdirSync(path.dirname(fullPath), { recursive: true });
         fs.writeFileSync(fullPath, file.buffer);
         totalSize += file.size;
@@ -461,7 +521,6 @@ app.all("/s/:id", (req, res) => {
        `);
     }
 
-    const crypto = require("crypto");
     const providedHash = crypto
       .createHash("sha256")
       .update(providedPassword)
@@ -751,7 +810,9 @@ setInterval(
         fs.readdirSync(dir).forEach((file) => {
           const filePath = path.join(dir, file);
           const stat = fs.statSync(filePath);
-          if (Date.now() - stat.mtimeMs > 3600000) fs.unlinkSync(filePath); // 1 hour for converter
+          if (Date.now() - stat.mtimeMs > 3600000) {
+            fs.rmSync(filePath, { recursive: true, force: true });
+          }
         });
       }
     });
@@ -835,7 +896,6 @@ app.put("/api/arsip/:id", (req, res) => {
       if (req.body.password === "") {
         fileInfo.passwordHash = null;
       } else {
-        const crypto = require("crypto");
         fileInfo.passwordHash = crypto
           .createHash("sha256")
           .update(req.body.password)
